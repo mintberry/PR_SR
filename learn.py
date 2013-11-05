@@ -58,22 +58,3 @@ def read_observation(filename):
 if __name__=='__main__':   #main function
 
     read_dict(sys.argv[1], lexicon_dict)
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
