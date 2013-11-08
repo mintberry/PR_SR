@@ -15,14 +15,19 @@ import string
 import operator
 from random import *
 from math import *
+from aux import *
 
 ___author__ = 'XH, XQ'
 __date__ = 'Nov 4 2013'
 __version__ = '1'
 
-# threshold
-likelihood = 0.0001
+# predefined paths
+p2p_dir = '../timit_p2p/'
+timit_dir_train = '../TIMIT/TRAIN/'
+timit_dir_test = '../TIMIT/TEST/'
+dict_dir = '../TIMITDIC.TXT'
 
+# threshold
 
 # class for a table entry
 class Cell:
@@ -34,27 +39,11 @@ class Cell:
 # language model
 lexicon_dict = defaultdict()
 
-# read model from file and random init
-def read_dict(filename, lexicon_dict):
-    text = codecs.open(filename, 'r', 'utf8')
-    for line in text:
-        if line[0] != ';':
-            key = line.split()[0]
-            pronunciation = line[line.find('/') + 1:line.rfind('/')].split()
-            if key not in lexicon_dict.keys():
-                lexicon_dict[key] = [pronunciation]
-            else:
-                lexicon_dict[key].append(pronunciation)
-
-def read_observation(filename):
-    f = codecs.open(filename, 'r', 'utf8')
-    # text = f.read()
-    lines = []
-    for line in f:
-        tokens = line.split()
-        lines.append(tokens)
-    return lines
 
 if __name__=='__main__':   #main function
+    read_dict(dict_dir, lexicon_dict)
 
-    read_dict(sys.argv[1], lexicon_dict)
+    write_p2p(sys.argv[1], timit_dir_train + 'dr1/fcjf0/', p2p_dir, lexicon_dict)
+
+
+
