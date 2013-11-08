@@ -40,21 +40,31 @@ def read_phone(filename):
 def sentence2phone(filename, lexicon_dict):
     text = codecs.open(filename, 'r', 'utf8')
     phones = ["h#"]
+    sentence = []
     for line in text:
         phone = lexicon_dict[line.split()[-1]][0]
         phones = phones + phone
+        sentence.append(line.split()[-1])
 
     phones.append("h#")
-    return phones
+    return (phones, sentence)
 
-def write_p2p(sid, input_dir, output_dir, lexicon_dict):
+def write_phone_dict(sid, input_dir, output_dir, lexicon_dict):
     f = codecs.open(output_dir + sid + '.p2p', 'w', 'utf8')
 
-    phones_dict = sentence2phone(input_dir + sid + '.wrd', lexicon_dict);
+    (phones_dict, sentence) = sentence2phone(input_dir + sid + '.wrd', lexicon_dict);
+
+    f.write(' '.join(sentence) + '\n')
+    f.write(' '.join(phones_dict) + '\n')
+    f.close();
+
+def write_phone_obs(sid, input_dir, output_dir, lexicon_dict):
+    f = codecs.open(output_dir + sid + '.p2p', 'a', 'utf8')
+
     phones_obs = read_phone(input_dir + sid + '.phn')
 
-    f.write(' '.join(phones_dict) + '\n')
-    f.write(' '.join(phones_obs))
+    f.write(' '.join(phones_obs) + '\n')
 
+    f.close()
 
 
