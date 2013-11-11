@@ -25,6 +25,10 @@ def read_dict(filename, lexicon_dict):
         if line[0] != ';':
             key = line.split()[0]
             pronunciation = line[line.find('/') + 1:line.rfind('/')].split()
+            # remove stress marker
+            for idx, phone in enumerate(pronunciation):
+                if phone[-1] == '1' or phone[-1] == '2':
+                    pronunciation[idx] = phone[:-1]
             if key not in lexicon_dict.keys():
                 lexicon_dict[key] = [pronunciation]
             else:
