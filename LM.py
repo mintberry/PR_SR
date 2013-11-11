@@ -24,8 +24,9 @@ __version__ = '1'
 
 # predefined paths
 dict_dir = '../TIMITDIC.TXT'
-prompts_dir = '../PROMPTS.TXT'
+prompts_dir = '../writable_prompts.txt'
 trimmed_prompts_file = '../trimmed_prompts.txt'
+hand_trimmed_prompts_file = '../hand_trimmed_prompts.txt'
 phonemes_file = '../prompts_phonemes.txt'
 
 def read_prompts(filename):
@@ -34,10 +35,20 @@ def read_prompts(filename):
 		for line in f:
 			if line[0] != ';':
 				line = line.split('(')[0]
-				line = re.sub(r'([,.!?])', r' ', line)
+				line = re.sub(r'([,.!?;:"])', r' ', line)
+				line = re.sub(r'--', r' ', line)
 				prompts.append(line)
 
 	return prompts
+
+def read_trimmed_prompts(filename):
+	with codecs.open(filename, 'r', 'utf8') as f:
+		trimmed_prompts = []
+		for line in f:
+			if line[0] != ';':
+				trimmed_prompts.append(line)
+
+	return trimmed_prompts
 
 def write_trimmed_prompts(filename, prompts):
 	with codecs.open(filename, 'w', 'utf8') as f:
@@ -65,10 +76,13 @@ if __name__ == '__main__':
 	read_dict(dict_dir, lexicon_dict)
 
 	#read in the prompts
-	trimmed_prompts = read_prompts(prompts_dir)
+	# trimmed_prompts = read_prompts(prompts_dir)
 
 	#write the trimmed prompts to file
-	write_trimmed_prompts(trimmed_prompts_file, trimmed_prompts)
+	# write_trimmed_prompts(trimmed_prompts_file, trimmed_prompts)
+
+	#after hand modification, read in the trimmed prompts
+	trimmed_prompts = read_trimmed_prompts(hand_trimmed_prompts_file)
 
 	#write the phonemes of each prompt sentence to file
 	trimmed_prompts_to_phonemes(phonemes_file, trimmed_prompts, lexicon_dict)
