@@ -29,12 +29,15 @@ def read_dict(filename, lexicon_dict):
                 lexicon_dict[key] = [pronunciation]
             else:
                 lexicon_dict[key].append(pronunciation)
+    text.close()
 
 def read_phone(filename):
     text = codecs.open(filename, 'r', 'utf8')
     phones = []
     for line in text:
         phones.append(line.split()[-1])
+
+    text.close()
     return phones
 
 def sentence2phone(filename, lexicon_dict):
@@ -46,6 +49,7 @@ def sentence2phone(filename, lexicon_dict):
         phones = phones + phone
         sentence.append(line.split()[-1])
 
+    text.close()
     phones.append("h#")
     return (phones, sentence)
 
@@ -56,7 +60,7 @@ def write_phone_dict(sid, input_dir, output_dir, lexicon_dict):
 
     f.write(' '.join(sentence) + '\n')
     f.write(' '.join(phones_dict) + '\n')
-    f.close();
+    f.close()
 
 def write_phone_obs(sid, input_dir, output_dir, lexicon_dict):
     f = codecs.open(output_dir + sid + '.p2p', 'a', 'utf8')
