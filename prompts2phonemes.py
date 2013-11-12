@@ -3,7 +3,7 @@ COMPUTATIONAL LINGUISTICS
 
 project: pronunciation recognition & sentence reconstruction
 
-This module counts the corpus to get the language model.
+This module translates all the prompts to their phonemes.
 """
 
 from __future__ import division          #integer division
@@ -30,6 +30,7 @@ hand_trimmed_prompts_file = '../hand_trimmed_prompts.txt'
 phonemes_file = '../prompts_phonemes.txt'
 
 def read_prompts(filename):
+	'''Read in the prompts'''
 	with codecs.open(filename, 'r', 'utf8') as f:
 		prompts = []
 		for line in f:
@@ -42,6 +43,7 @@ def read_prompts(filename):
 	return prompts
 
 def read_trimmed_prompts(filename):
+	'''Read in the trimmed prompts'''
 	with codecs.open(filename, 'r', 'utf8') as f:
 		trimmed_prompts = []
 		for line in f:
@@ -56,19 +58,19 @@ def write_trimmed_prompts(filename, prompts):
 			f.write(line + '\n')
 
 def trimmed_prompts_to_phonemes(filename, prompts, lexicon_dict):
+	'''Look up each word in the lexicon and translate prompts to phonemes'''
 	with codecs.open(filename, 'w', 'utf8') as f:
 		for line in prompts:
 			line = line.split()
-			phonemes = ['h#']
+			phonemes = []
 			for word in line:
 				word = word.lower()
 				if word in lexicon_dict:
-					phoneme = lexicon_dict[word][0]
+					phoneme = ''.join(lexicon_dict[word][0])
 				else:
-					phoneme = ['XXX']
-				phonemes = phonemes + phoneme
-			phonemes.append('h#')
-			f.write(' '.join(phonemes) + '\n')
+					phoneme = 'XXX'
+				phonemes.append(phoneme)
+			f.write('#'.join(phonemes) + '\n')
 
 if __name__ == '__main__':
 	#read in the lexicon
@@ -77,7 +79,6 @@ if __name__ == '__main__':
 
 	#read in the prompts
 	# trimmed_prompts = read_prompts(prompts_dir)
-
 	#write the trimmed prompts to file
 	# write_trimmed_prompts(trimmed_prompts_file, trimmed_prompts)
 
