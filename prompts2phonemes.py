@@ -77,13 +77,13 @@ if __name__ == '__main__':
 	lexicon_dict = defaultdict(str)
 	read_dict(dict_dir, lexicon_dict)
 
-	#read in the prompts
+	# read in the prompts
 	# trimmed_prompts = read_prompts(prompts_dir)
-	#write the trimmed prompts to file
+	# write the trimmed prompts to file
 	# write_trimmed_prompts(trimmed_prompts_file, trimmed_prompts)
 
-	#after hand modification, read in the trimmed prompts
+	# after hand modification, read in the trimmed prompts
 	trimmed_prompts = read_trimmed_prompts(hand_trimmed_prompts_file)
 
-	#write the phonemes of each prompt sentence to file
+	# write the phonemes of each prompt sentence to file
 	trimmed_prompts_to_phonemes(phonemes_file, trimmed_prompts, lexicon_dict)
