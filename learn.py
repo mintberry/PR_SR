@@ -41,6 +41,7 @@ if __name__=='__main__':   #main function
     # generate_p2p('dr1/', lexicon_dict)        
 
     phoneme_trees = align_dir(p2p_dir)
+    dtree2wfst(phoneme_trees, p2p_dir + 'wfst_p2p.fst')
     
 
 
