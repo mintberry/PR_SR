@@ -331,6 +331,31 @@ def transition_fsa(phone_class, filename):
 
     f.close()
 
+# trained data as inference input
+def wfsa_reformat(wfsa_file, wfsa_output):
+    f1 = codecs.open(wfsa_file, 'r', 'utf8')
+    f2 = codecs.open(wfsa_output, 'w', 'utf8')
+
+    f2.write(final_state + '\n')
+
+    for idx, line in enumerate(f1):
+        if idx != 0:
+            args = line.split()
+            state_1 = args[0][1:]
+            state_2 = args[1][1:]
+            token_in = args[2]
+            token_out = args[3]
+            prob = args[4]
+
+            if token_out == epsilon:
+                if state_1 == final_state:
+                    f2.write('(' + start_state + ' (' + state_2 + ' "' + state_2.lower() + '" ' + prob + '\n')
+                else:
+                    f2.write('(' + state_1[:-2] + ' (' + state_2 + ' "' + state_2.lower() + '" ' + prob + '\n')
+
+    f1.close()
+    f2.close()
+
 
 
 

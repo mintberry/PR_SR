@@ -88,6 +88,8 @@ def write_phone_dict(sid, input_dir, output_dir, lexicon_dict):
     f.write(' '.join(phones_dict) + '\n')
     f.close()
 
+    return '\n' + ' '.join(('"' + phone + '"') for phone in phones_dict) + '\n'
+
 def write_phone_obs(sid, input_dir, output_dir, lexicon_dict):
     f = codecs.open(output_dir + sid + '.p2p', 'a', 'utf8')
 
@@ -105,6 +107,9 @@ def list_files_with(files_dir, suffix):
 def generate_p2p(dialect_region, lexicon_dict): # e.g. dr1/
     file_list = os.listdir(timit_dir_train + dialect_region)
     sid_dict = defaultdict()
+
+    baseforms = []
+
     for subdir in file_list:
         if subdir[0] != '.':
             # find all sentences said by this person
@@ -116,9 +121,15 @@ def generate_p2p(dialect_region, lexicon_dict): # e.g. dr1/
                 filepath = timit_dir_train + dialect_region + subdir + '/' + sid + '.phn'  
                 if os.path.isfile(filepath):
                     if sid_dict[sid]:
-                        write_phone_dict(sid, timit_dir_train + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
+                        baseforms += write_phone_dict(sid, timit_dir_train + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
                         sid_dict[sid] = False 
                     write_phone_obs(sid, timit_dir_train + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
+
+    f = codecs.open(p2p_dir + 'baseform.data', 'w', 'utf8')
+    for baseform in baseforms:
+        f.write(baseform)
+
+    f.close()
 
 
 
