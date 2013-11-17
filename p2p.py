@@ -229,14 +229,17 @@ def split_change(phoneme, union_dict):
             else:
                 linear_dict[str(idx) + ' ' + str(change_counts) + ' ' + last_change + ' ' + sub_change] += union_dict[change]
 
-            if (str(idx) + ' ' + str(change_counts) + ' ' + last_change) not in aux_dict.keys():
-                aux_dict[str(idx) + ' ' + str(change_counts) + ' ' + last_change] = union_dict[change]
+            charge_counts = change_counts if idx != 0 else idx
+            if (str(idx) + ' ' + str(charge_counts) + ' ' + last_change) not in aux_dict.keys():
+                aux_dict[str(idx) + ' ' + str(charge_counts) + ' ' + last_change] = union_dict[change]
             else:
-                aux_dict[str(idx) + ' ' + str(change_counts) + ' ' + last_change] += union_dict[change]
+                aux_dict[str(idx) + ' ' + str(charge_counts) + ' ' + last_change] += union_dict[change]
 
     # normalize
     for key in linear_dict.keys():
         last_change = ' '.join(key.split()[0:3])
+        if last_change.split()[0] == '0':
+            last_change = '0 0 ' + last_change.split()[-1]
         linear_dict[key] /= aux_dict[last_change]
 
     return linear_dict
@@ -266,7 +269,7 @@ def changes2emissions(phoneme, union_dict, total_changes):
             token_out = '"' + align_symbol[:align_symbol.find('/')] + '"'
 
         cur_state = final_state if state_number == 0 else (phoneme + '_' + str(state_number) + '_' + str(state_count))
-        next_state = final_state if state_number == state_count - 1 else (phoneme + '_' + str(state_number) + '_' + str(state_count))
+        next_state = final_state if state_number == state_count - 1 else (phoneme + '_' + str(state_number + 1) + '_' + str(state_count))
 
         emissions += ['(' + cur_state + ' ' + '(' + next_state + ' ' + token_in + ' ' + token_out + ' ' + str(prob) + '))']
 
