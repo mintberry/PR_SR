@@ -256,7 +256,7 @@ def changes2emissions(phoneme, union_dict, total_changes):
     for key in linear_dict.keys():
         state_number = int(key.split()[0])
         state_count = int(key.split()[1])
-        token_in = '"' + key.split()[2] + '"'
+        token_in = '"' + key.split()[2] + '"' if key.split()[2] != epsilon else epsilon
         token_out = align_symbol = key.split()[3]
         prob = linear_dict[key]
         if align_symbol[0] == '-':
@@ -278,7 +278,7 @@ def changes2emissions(phoneme, union_dict, total_changes):
 def dtree2wfst(phoneme_trees, filename):
     f = codecs.open(p2p_dir + filename, 'w', 'utf8')
 
-    f.write(final_state + '\n');
+    f.write(final_state + '\n')
     
     for phoneme in phoneme_trees.keys():
         # here ignore the context, union all changes for this phoneme
@@ -298,6 +298,39 @@ def dtree2wfst(phoneme_trees, filename):
             f.write(emission + '\n')
 
     f.close()
+
+# generate an fsa for carmel to train
+def transition_fsa(phone_class, filename):
+    f = codecs.open(p2p_dir + filename, 'w', 'utf8')
+
+    f.write(final_state + '\n')
+
+    transitions = []
+    emissions = []
+
+    for phoneme in phone_class.keys():
+        self_state = phoneme.upper()
+        emit_state = self_state + '_e'
+        # emit itself
+        emissions += ['(' + self_state + ' ' + '(' + emit_state + ' *e* "' + phoneme + '"))']
+
+        # transition with final
+        transitions += ['(' + final_state + ' ' + '(' + self_state + ' *e* *e*))']
+        transitions += ['(' + emit_state + ' ' + '(' + final_state + ' *e* *e*))']
+
+        for next_phoneme in phone_class.keys():
+            transitions += ['(' + emit_state + ' ' + '(' + next_phoneme.upper() + ' *e* *e*))']
+
+    for transition in transitions:
+        f.write(transition + '\n')
+
+    f.write('\n')
+
+    for emission in emissions:
+        f.write(emission + '\n')
+
+    f.close()
+
 
 
 
