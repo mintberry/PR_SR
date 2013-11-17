@@ -351,7 +351,10 @@ def wfsa_reformat(wfsa_file, wfsa_output):
                 if state_1 == final_state:
                     f2.write('(' + start_state + ' (' + state_2 + ' "' + state_2.lower() + '" ' + prob + '\n')
                 else:
-                    f2.write('(' + state_1[:-2] + ' (' + state_2 + ' "' + state_2.lower() + '" ' + prob + '\n')
+                    if state_2 == final_state:
+                        f2.write('(' + state_1[:-2] + ' (' + state_2 + ' ' + epsilon + ' ' + prob + '\n')
+                    else:
+                        f2.write('(' + state_1[:-2] + ' (' + state_2 + ' "' + state_2.lower() + '" ' + prob + '\n')
 
     f1.close()
     f2.close()
