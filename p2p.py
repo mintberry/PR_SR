@@ -201,10 +201,10 @@ def align_dir(p2p_dir):
 
     f = codecs.open(p2p_dir + 'alignments', 'w', 'utf8')
 
-    # for align_seq in align_seqs:
-    #     f.write(' '.join(align_seq) + '\n')    
+    for align_seq in align_seqs:
+        f.write(' '.join(align_seq) + '\n')    
 
-    # f.close()
+    f.close()
 
     return phoneme_trees
 
@@ -370,6 +370,64 @@ def wfsa_reformat(wfsa_file, wfsa_output):
     f1.close()
     f2.close()
 
+# WER
+# recognized sentence in form of "x" "y" "z"...
+# reference in normal form
+def compute_wer(recognized, reference):
+    phonemes = reference.split()
+    phones = list(phone[1:-1] for phone in recognized.split())
+
+    top = 0
+    bottom = len(phonemes)
+    table = []
+    for i in range(len(phones)): # rows
+        table.append([])
+        for j in range(len(phonemes)): # columns
+            step = Step()
+            if i == 0 and j == 0: # h#s
+                step.last = (i - 1, j - 1)
+                step.action = '_'
+            if i == 0 and j != 0:
+                step.last = (i, j - 1)
+                step.val = table[i][j - 1].val + cost_delete
+                step.action = '-' + phonemes[j]
+            elif i != 0 and j == 0:
+                step.last = (i - 1, j)
+                step.val = table[i - 1][j].val + cost_insert
+                step.action = '+' + phones[i]
+            elif i != 0 and j != 0:
+                last_steps = [(table[i - 1][j - 1].val + (0.0 if phonemes[j] == phones[i] else cost_sub), (i - 1, j - 1), \
+                    ('_' if phonemes[j] == phones[i] else phones[i] + '/' + phonemes[j])), \
+                (table[i - 1][j].val + cost_insert, (i - 1, j), '+' + phones[i]), \
+                (table[i][j - 1].val + cost_delete, (i, j - 1), '-' + phonemes[j])]
+                finest = min(last_steps, key=itemgetter(0))
+                step.last = finest[1]
+                step.val = finest[0]
+                step.action = finest[2]
+
+
+            table[i].append(step)
+
+    # best alignment sequence
+    (i, j) = (len(phones) - 1, len(phonemes) - 1)
+    last_j = j + 1
+    last_j_changes = ''
+    align_seq = []
+    while (i ,j) != (-1, -1):
+        align_seq.insert(0, table[i][j].action)
+        
+        # add step and context
+        last_j_changes = (table[i][j].action if last_j != j else (table[i][j].action + ' ' + last_j_changes))
+        
+        last_j = j
+        
+        (i ,j) = table[i][j].last
+
+    for alignment in align_seq:
+        if alignment != '_':
+            top += 1
+
+    print str(float(top) / bottom)
 
 
 
