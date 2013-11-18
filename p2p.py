@@ -282,6 +282,8 @@ def dtree2wfst(phoneme_trees, filename):
     f = codecs.open(p2p_dir + filename, 'w', 'utf8')
 
     f.write(final_state + '\n')
+    # make sure the first row starts with a START state!!!
+    f.write('(' + start_state + ' ' + '(' + final_state + ' ' + '*e*' + ' ' + '*e*' + ' ' + '1.0' + '))\n')
     
     for phoneme in phoneme_trees.keys():
         # here ignore the context, union all changes for this phoneme
@@ -296,6 +298,7 @@ def dtree2wfst(phoneme_trees, filename):
                     union_dict[change] += context_dict[change]
 
         # write union_dict
+        # make sure the first row starts with a START state
         emissions = changes2emissions(phoneme, union_dict, total_changes)
         for emission in emissions:
             f.write(emission + '\n')
