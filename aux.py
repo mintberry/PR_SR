@@ -99,6 +99,8 @@ def write_phone_obs(sid, input_dir, output_dir, lexicon_dict):
 
     f.close()
 
+    return ' '.join(('"' + phone + '"') for phone in phones_obs) + '\n'
+
 def list_files_with(files_dir, suffix):
     return [f for f in os.listdir(files_dir) if f.find(suffix) != -1]
 
@@ -121,11 +123,11 @@ def generate_p2p(dialect_region, lexicon_dict): # e.g. dr1/
                 filepath = timit_dir_train + dialect_region + subdir + '/' + sid + '.phn'  
                 if os.path.isfile(filepath):
                     if sid_dict[sid]:
-                        baseforms += write_phone_dict(sid, timit_dir_train + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
+                        write_phone_dict(sid, timit_dir_train + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
                         sid_dict[sid] = False 
-                    write_phone_obs(sid, timit_dir_train + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
+                    baseforms += write_phone_obs(sid, timit_dir_train + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
 
-    f = codecs.open(p2p_dir + 'baseform.data', 'w', 'utf8')
+    f = codecs.open(p2p_dir + 'surface.data', 'w', 'utf8')
     for baseform in baseforms:
         f.write(baseform)
 

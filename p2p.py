@@ -303,7 +303,7 @@ def dtree2wfst(phoneme_trees, filename):
 def transition_fsa(phone_class, filename):
     f = codecs.open(p2p_dir + filename, 'w', 'utf8')
 
-    f.write(final_state + '\n')
+    f.write('H#' + '\n')
 
     transitions = []
     emissions = []
@@ -314,9 +314,11 @@ def transition_fsa(phone_class, filename):
         # emit itself
         emissions += ['(' + self_state + ' ' + '(' + emit_state + ' *e* "' + phoneme + '"))']
 
-        # transition with final
-        transitions += ['(' + final_state + ' ' + '(' + self_state + ' *e* *e*))']
-        transitions += ['(' + emit_state + ' ' + '(' + final_state + ' *e* *e*))']
+        # transition with final if "H#"
+        # since the start and end state is h# now
+        # if phoneme == 'h#':
+        #     transitions += ['(' + final_state + ' ' + '(' + self_state + ' *e* *e*))']
+        #     transitions += ['(' + emit_state + ' ' + '(' + final_state + ' *e* *e*))']
 
         for next_phoneme in phone_class.keys():
             transitions += ['(' + emit_state + ' ' + '(' + next_phoneme.upper() + ' *e* *e*))']
@@ -337,6 +339,9 @@ def wfsa_reformat(wfsa_file, wfsa_output):
     f2 = codecs.open(wfsa_output, 'w', 'utf8')
 
     f2.write(final_state + '\n')
+    # first, the h# rules
+    f2.write('(' + start_state + ' (' + 'H#' + ' "' + 'h#' + '" ' + '1.0))' + '\n')
+    f2.write('(' + 'H#' + ' (' + final_state + ' ' + epsilon + ' ' + '1.0))' + '\n')
 
     for idx, line in enumerate(f1):
         if idx != 0:
