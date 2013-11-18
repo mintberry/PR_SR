@@ -44,7 +44,7 @@ if __name__=='__main__':   #main function
     dtree2wfst(phoneme_trees, p2p_dir + 'wfst_p2p.fst')
     # transition_fsa(get_phone_class(), p2p_dir + 'fsa_p2p.fsa')
 
-    wfsa_reformat(p2p_dir + 'wfsa_p2p.fsa', p2p_dir + 'wfsa_p2p_n.fsa')
+    # wfsa_reformat(p2p_dir + 'wfsa_p2p.fsa', p2p_dir + 'wfsa_p2p_n.fsa')
     
 
 

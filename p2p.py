@@ -123,7 +123,7 @@ def count_alignment(align_table, phonemes, phones, phone_class, phoneme_trees, c
     last_j = j + 1
     last_j_changes = ''
     align_seq = []
-    while (i ,j) != (0, 0):
+    while (i ,j) != (-1, -1):
         align_seq.insert(0, align_table[i][j].action)
         
         # add step and context
@@ -145,14 +145,17 @@ def count_alignment(align_table, phonemes, phones, phone_class, phoneme_trees, c
 # align phoneme-phone, while count changes on context
 def align(phonemes, phones, phone_class, phoneme_trees, count_alignment, count_changes):
     # remove last 'h#' or keep it?
-    phonemes = phonemes[0:-1]
-    phones = phones[0:-1]
+    # phonemes = phonemes[0:-1]
+    # phones = phones[0:-1]
 
     table = []
     for i in range(len(phones)): # rows
         table.append([])
         for j in range(len(phonemes)): # columns
             step = Step()
+            if i == 0 and j == 0: # h#s
+                step.last = (i - 1, j - 1)
+                step.action = '_'
             if i == 0 and j != 0:
                 step.last = (i, j - 1)
                 step.val = table[i][j - 1].val + cost_delete
@@ -196,7 +199,7 @@ def align_dir(p2p_dir):
     for f in files:
         align_seqs += align_file(p2p_dir + f, phoneme_trees, phone_class)
 
-    # f = codecs.open(p2p_dir + 'alignments', 'w', 'utf8')
+    f = codecs.open(p2p_dir + 'alignments', 'w', 'utf8')
 
     # for align_seq in align_seqs:
     #     f.write(' '.join(align_seq) + '\n')    
