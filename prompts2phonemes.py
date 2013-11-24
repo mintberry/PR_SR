@@ -29,6 +29,8 @@ trimmed_prompts_file = '../trimmed_prompts.txt'
 hand_trimmed_prompts_file = '../hand_trimmed_prompts.txt'
 phonemes_file = './prompts_phonemes.txt'
 
+hashtag_added_prompts_file = '../hashtag_added_prompts.txt'
+
 def read_prompts(filename):
 	'''Read in the prompts'''
 	with codecs.open(filename, 'r', 'utf8') as f:
@@ -72,6 +74,12 @@ def trimmed_prompts_to_phonemes(filename, prompts, lexicon_dict):
 				phonemes.append(phoneme)
 			f.write('#'.join(phonemes) + '\n')
 
+def add_hashtag_to_trimmed_prompts(filename, prompts):
+	'''For each line of prompts, add h# to both head and tail of the sentence'''
+	with codecs.open(filename, 'w', 'utf8') as f:
+		for line in prompts:
+			f.write('start# ' + line[:-2] + 'end#\n')
+
 if __name__ == '__main__':
 	#read in the lexicon
 	lexicon_dict = defaultdict(list)
@@ -86,4 +94,7 @@ if __name__ == '__main__':
 	trimmed_prompts = read_trimmed_prompts(hand_trimmed_prompts_file)
 
 	# write the phonemes of each prompt sentence to file
-	trimmed_prompts_to_phonemes(phonemes_file, trimmed_prompts, lexicon_dict)
+	# trimmed_prompts_to_phonemes(phonemes_file, trimmed_prompts, lexicon_dict)
+
+	# add h# to prompts
+	add_hashtag_to_trimmed_prompts(hashtag_added_prompts_file, trimmed_prompts)

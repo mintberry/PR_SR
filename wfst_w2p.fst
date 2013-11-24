@@ -1,4 +1,6 @@
 FINAL
+(FINAL (FINAL "start#" *e* 1.0))
+(FINAL (FINAL "end#" *e* 1.0))
 (FINAL (fawn_1 "fawn"  "f" 1.0))
 (fawn_1 (fawn_2 *e* "ao" 1.0))
 (fawn_2 (FINAL *e* "n" 1.0))

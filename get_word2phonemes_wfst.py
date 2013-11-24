@@ -33,6 +33,8 @@ big_prob = '1.0'
 def get_word2phonemes_wfst(filename, lexicon_dict):
 	with codecs.open(filename, 'w', 'utf8') as f:
 		f.write(final_state + '\n')
+		f.write('(FINAL (FINAL "start#" *e* 1.0))\n')
+		f.write('(FINAL (FINAL "end#" *e* 1.0))\n')
 		for key in lexicon_dict:
 			phonemes = lexicon_dict[key][0]
 			phonemes_len = len(phonemes)
