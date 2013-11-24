@@ -20,8 +20,8 @@ __version__ = '1'
 
 # predefined paths
 phonemes_file = './prompts_phonemes.txt'
-unigram_model_file = './unigram_model_file.txt'
-bigram_model_file = './bigram_model_file.txt'
+unigram_model_file = './phon-word_unigram_model_file.txt'
+bigram_model_file = './phon-word_bigram_model_file.txt'
 
 
 def count_words(filename, uni_count_dict, pair_count_dict):

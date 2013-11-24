@@ -27,7 +27,7 @@ dict_dir = '../TIMITDIC.TXT'
 prompts_dir = '../writable_prompts.txt'
 trimmed_prompts_file = '../trimmed_prompts.txt'
 hand_trimmed_prompts_file = '../hand_trimmed_prompts.txt'
-phonemes_file = '../prompts_phonemes.txt'
+phonemes_file = './prompts_phonemes.txt'
 
 def read_prompts(filename):
 	'''Read in the prompts'''
@@ -74,7 +74,7 @@ def trimmed_prompts_to_phonemes(filename, prompts, lexicon_dict):
 
 if __name__ == '__main__':
 	#read in the lexicon
-	lexicon_dict = defaultdict(str)
+	lexicon_dict = defaultdict(list)
 	read_dict(dict_dir, lexicon_dict)
 
 	# read in the prompts

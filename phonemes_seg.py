@@ -21,8 +21,8 @@ __date__ = 'Nov 10 2013'
 __version__ = '1'
 
 # predefined paths
-unigram_model_file = './unigram_model_file.txt'
-bigram_model_file = './bigram_model_file.txt'
+unigram_model_file = './phon-word_unigram_model_file.txt'
+bigram_model_file = './phon-word_bigram_model_file.txt'
 observation_file = './observation1.txt'
 seg_result_file = './seg_result.txt'
 
