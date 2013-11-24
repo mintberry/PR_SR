@@ -26,6 +26,7 @@ timit_dir_train = '../TIMIT/TRAIN/'
 timit_dir_test = '../TIMIT/TEST/'
 dict_dir = '../TIMITDIC.TXT'
 
+
 # read dict, key is a word, val is a list of phones
 def read_dict(filename, lexicon_dict):
     text = codecs.open(filename, 'r', 'utf8')
@@ -83,9 +84,10 @@ def write_phone_dict(sid, input_dir, output_dir, lexicon_dict):
     f = codecs.open(output_dir + sid + '.p2p', 'w', 'utf8')
 
     (phones_dict, sentence) = sentence2phone(input_dir + sid + '.wrd', lexicon_dict);
-
+ 
     f.write(' '.join(sentence) + '\n')
     f.write(' '.join(phones_dict) + '\n')
+        
     f.close()
 
     return '\n' + ' '.join(('"' + phone + '"') for phone in phones_dict) + '\n'
@@ -98,6 +100,16 @@ def write_phone_obs(sid, input_dir, output_dir, lexicon_dict):
     f.write(' '.join(phones_obs) + '\n')
 
     f.close()
+
+    return ' '.join(('"' + phone + '"') for phone in phones_obs) + '\n'
+
+def nowrite_phone_dict(sid, input_dir, output_dir, lexicon_dict):
+    (phones_dict, sentence) = sentence2phone(input_dir + sid + '.wrd', lexicon_dict);
+
+    return ' '.join(('"' + phone + '"') for phone in phones_dict) + '\n'
+
+def nowrite_phone_obs(sid, input_dir, output_dir, lexicon_dict):
+    phones_obs = read_phone(input_dir + sid + '.phn')
 
     return ' '.join(('"' + phone + '"') for phone in phones_obs) + '\n'
 
@@ -127,12 +139,44 @@ def generate_p2p(dialect_region, lexicon_dict): # e.g. dr1/
                         sid_dict[sid] = False 
                     baseforms += write_phone_obs(sid, timit_dir_train + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
 
+    # f = codecs.open(p2p_dir + 'surface.data', 'w', 'utf8')
+    # for baseform in baseforms:
+    #     f.write(baseform)
+
+    # f.close()
+
+# generate surface-baseform mapping for all sentences in test set in a dialect region
+def generate_p2p_test(dialect_region, lexicon_dict):
+    file_list = os.listdir(timit_dir_test + dialect_region)
+    sid_dict = defaultdict()
+
+    baseforms_test = []
+    surfaces_test = []
+
+    for subdir in file_list:
+        if subdir[0] != '.':
+            # find all sentences said by this person
+            files = [f for f in os.listdir(timit_dir_test + dialect_region + subdir + '/') if f.find('.phn') != -1]
+            for f in files:
+                sid = f[:f.find('.phn')]
+                if sid not in sid_dict.keys():
+                    sid_dict[sid] = True
+                filepath = timit_dir_test + dialect_region + subdir + '/' + sid + '.phn'  
+                if os.path.isfile(filepath):
+                    surfaces_test += nowrite_phone_obs(sid, timit_dir_test + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
+                    baseforms_test += nowrite_phone_dict(sid, timit_dir_test + dialect_region + subdir + '/', p2p_dir, lexicon_dict)
+
     f = codecs.open(p2p_dir + 'surface.data', 'w', 'utf8')
-    for baseform in baseforms:
-        f.write(baseform)
+    for surface in surfaces_test:
+        f.write(surface)
 
     f.close()
 
+    f = codecs.open(p2p_dir + 'baseform.data', 'w', 'utf8')
+    for baseform in baseforms_test:
+        f.write(baseform)
+
+    f.close()
 
 
 

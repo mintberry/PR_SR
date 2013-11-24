@@ -18,6 +18,7 @@ from random import *
 from math import *
 from aux import *
 from p2p import *
+from dict_mod import *
 
 ___author__ = 'XH, XQ'
 __date__ = 'Nov 4 2013'
@@ -37,16 +38,20 @@ lexicon_dict = defaultdict()
 
 
 if __name__=='__main__':   #main function
-    # read_dict(dict_dir, lexicon_dict) 
+    read_dict(dict_dir, lexicon_dict) 
+    generate_p2p_test('dr1/', lexicon_dict)        
     # generate_p2p('dr1/', lexicon_dict)        
-
     # phoneme_trees = align_dir(p2p_dir)
     # dtree2wfst(phoneme_trees, p2p_dir + 'wfst_p2p.fst')
     # transition_fsa(get_phone_class(), p2p_dir + 'fsa_p2p.fsa')
 
     # wfsa_reformat(p2p_dir + 'wfsa_p2p.fsa', p2p_dir + 'wfsa_p2p_n.fsa')
     
-    compute_wer(sys.argv[1], sys.argv[2])
+    # compute_wer(sys.argv[1], sys.argv[2])
+
+    # lex_trans_fsa(read_dict_keys(dict_dir, lexicon_dict), 'fsa_lex.fsa')
+    # lex_emit_wfst(lexicon_dict, 'wfst_lex.fst')
+
 
 
 
