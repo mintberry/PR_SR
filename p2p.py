@@ -374,7 +374,8 @@ def wfsa_reformat(wfsa_file, wfsa_output):
 # recognized sentence in form of "x" "y" "z"...
 # reference in normal form
 def compute_wer(recognized, reference):
-    phonemes = reference.split()
+    # phonemes = reference.split()
+    phonemes = list(phone[1:-1] for phone in reference.split())
     phones = list(phone[1:-1] for phone in recognized.split())
 
     top = 0
